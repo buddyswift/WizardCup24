@@ -87,14 +87,14 @@ async function fetchAndPost() {
             return;
         }
 
-        channel.send(`*Pssst! Word has it that the Snitch has been seen glinting near the Hogsmeade stand. This could be our chance to win the cup. Act natural and let's give it our best shot.*
-        
-        `);
+
         
         for (const task of tasks) {
             console.log(`Processing task with Key: ${task.Key}`);
             LastPostedKey2 = task.Key;
-
+            
+            channel.send('*' + task.Message + '*');
+            
             const embed = new EmbedBuilder();
             embed.setTitle(`**${task['Title']}**`);
             embed.addFields(
