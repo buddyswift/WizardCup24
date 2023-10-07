@@ -81,7 +81,7 @@ async function fetchAndPost() {
             return;
         }
 
-        const channel = client.channels.cache.find(ch => ch.name === 'golden-snitch-task');
+        const channel = client.channels.cache.find(ch => ch.name === 'golden-snitch');
         if (!channel) {
             console.log('Channel not found.');
             return;
