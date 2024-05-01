@@ -1,7 +1,9 @@
+require('dotenv').config();
 const { EmbedBuilder } = require('discord.js');
 const OpenAI = require("openai");
-const openai = new OpenAI();
+const openai = new OpenAI(process.env.OPENAI_API_KEY);
 const { userHasHouseRole, main } = require('./utilities.js'); // Import utilities
+
 
 async function handleQuery(message) {
     const query = message.content.slice(5).trim();

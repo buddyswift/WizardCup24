@@ -1,7 +1,8 @@
 // utilities.js
+require('dotenv').config();
 const OpenAI = require("openai");
 const { EmbedBuilder } = require('discord.js');
-const openai = new OpenAI();
+const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
 // Function to check if the user has a specific house role
 function userHasHouseRole(user, rolename, message) {
@@ -30,7 +31,7 @@ async function main(userMessage, message, rolename) {
             thumbnailUrl = 'https://static.wikia.nocookie.net/p__/images/f/f3/Copia_de_uhpfilius9it%282%29.jpg/revision/latest?cb=20170904093206&path-prefix=protagonist';
         } else if (userHasHouseRole(message.author, 'Slytherin', message)) {
             houseMaster = 'Snape';
-            thumbnailUrl = 'https://static.wikia.nocookie.net/harrypotter/images/a/a3/Severus_Snape.jpg/revision/latest?cb=20150307193047';
+            thumbnailUrl = 'https://static.wikia.nocookie.net/harrypotter/images/9/92/SeverusSnape.jpg/revision/latest?cb=20071006032924';
         } else {
             // User doesn't belong to any house
             throw new Error("User doesn't belong to any house.");
