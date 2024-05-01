@@ -37,17 +37,8 @@ client.on('messageCreate', async message => {
 
     const [command, ...args] = message.content.trim().split(/\s+/); // Split message into command and arguments
 
-    // Check if the command is a known character command
-    const characterCommand = commandsList.find(cmd => cmd.name === command.toLowerCase());
-    if (characterCommand) {
-        const userMessage = args.join(' '); // Join the arguments as the user message
-        if (!userMessage) {
-            message.channel.send('Please provide a message.');
-            return;
-        }
-        // Call the queryCharacter function with the character command, user message, and message object
-        await queryCharacter(characterCommand.name.slice(1), userMessage, message); // Remove the '!' prefix from the command name
-    } else if (command.toLowerCase() === '!ask') {
+    // Check if the command is the !ask command
+    if (command.toLowerCase() === '!ask') {
         const userMessage = args.join(' '); // Join the arguments as the user message
         if (!userMessage) {
             message.channel.send('Please provide a message.');
@@ -55,16 +46,29 @@ client.on('messageCreate', async message => {
         }
         // Call the handleQuery function with the user message and the message object
         await handleQuery(message, userMessage);
-    } else if (command.toLowerCase() === '!commands') {
-        // Format the commands list
-        const formattedCommands = commandsList.map(cmd => `${cmd.name}: ${cmd.description}`).join('\n');
-
-        // Send the list of commands to the user
-        message.channel.send('List of available commands:\n' + formattedCommands);
     } else {
-        // Handle unrecognized commands
-        message.channel.send("Command not recognized. Use `!commands` to see the list of available commands.");
+        // Check if the command is a known command
+        const matchingCommand = commandsList.find(cmd => cmd.name.toLowerCase() === command.toLowerCase());
+        if (matchingCommand) {
+            const userMessage = args.join(' '); // Join the arguments as the user message
+            if (!userMessage) {
+                message.channel.send('Please provide a message.');
+                return;
+            }
+            // Call the queryCharacter function with the command, user message, and message object
+            await queryCharacter(matchingCommand.name.slice(1), userMessage, message); // Pass matchingCommand.name.slice(1) to remove the prefix
+        } else if (command.toLowerCase() === '!commands') {
+            // Format the commands list
+            const formattedCommands = commandsList.map(cmd => `${cmd.name}: ${cmd.description}`).join('\n');
+
+            // Send the list of commands to the user
+            message.channel.send('List of available commands:\n' + formattedCommands);
+        } else {
+            // Handle unrecognized commands
+            message.channel.send("Command not recognized. Use `!commands` to see the list of available commands.");
+        }
     }
 });
+
 
 client.login(process.env.DISCORD_TOKEN);
