@@ -32,7 +32,7 @@ client.on('messageCreate', async message => {
     } else if (command.toLowerCase() === '!commands') {
         // List all available commands and their descriptions
         const commandsList = [
-            { name: '!ask', description: 'Ask a question to the bot.' },
+            { name: '!ask', description: 'Ask a question of your housemaster.' },
             { name: '!commands', description: 'List all available commands and their descriptions.' },
             { name: '!malfoy', description: 'Interact with Draco Malfoy.' },
             { name: '!dumbledore', description: 'Interact with Albus Dumbledore.' },
@@ -53,14 +53,10 @@ client.on('messageCreate', async message => {
 
         // Send the list of commands to the user
         message.channel.send('List of available commands:\n' + formattedCommands);
-    } else if (command.startsWith('!')) {
+    } else if (command.startsWith('!') && command.slice(1).toLowerCase() in queryCharacter) {
         // Extract the character command from the message
         const characterCommand = command.toLowerCase().slice(1); // Remove the '!' prefix
         const userMessage = args.join(' '); // Join the arguments as the user message
-        if (!userMessage) {
-            message.channel.send('Please provide a message.');
-            return;
-        }
         // Call the queryCharacter function with the character command, user message, and message object
         await queryCharacter(characterCommand, userMessage, message);
     }
