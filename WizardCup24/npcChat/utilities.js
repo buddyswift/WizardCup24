@@ -3,6 +3,16 @@ const OpenAI = require("openai");
 const { EmbedBuilder } = require('discord.js');
 const openai = new OpenAI();
 
+// Function to check if the user has a specific house role
+function userHasHouseRole(user, rolename, message) {
+    // Check if the user is a member of a guild where the message was sent
+    const guildMember = message.guild.members.cache.get(user.id);
+    if (!guildMember) return false; // User is not a member of the guild
+
+    // Check if the user has the specified role
+    return guildMember.roles.cache.some(role => role.name === rolename);
+}
+
 async function main(userMessage, message, rolename) {
     try {
         let houseMaster;
