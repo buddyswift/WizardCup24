@@ -1,7 +1,7 @@
 // index.js
 const { Client, GatewayIntentBits } = require('discord.js');
-const { handleQuery } = require('./npcChat/handleQuery');
-const { queryCharacter } = require('./npcChat/characterQuery');
+const { handleQuery } = require('./npcChat/handleQuery.js');
+const { queryCharacter } = require('./npcChat/characterQuery.js');
 
 const client = new Client({
     intents: [

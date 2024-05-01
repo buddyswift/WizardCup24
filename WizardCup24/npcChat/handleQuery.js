@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const OpenAI = require("openai");
 const openai = new OpenAI();
-const { userHasHouseRole, main } = require('./utilities'); // Import utilities
+const { userHasHouseRole, main } = require('./utilities.js'); // Import utilities
 
 async function handleQuery(message) {
     const query = message.content.slice(5).trim();

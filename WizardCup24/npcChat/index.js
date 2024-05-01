@@ -1,5 +1,5 @@
-const handleQuery = require('./handleQuery');
-const userHasHouseRole = require('./utilities').userHasHouseRole;
+const handleQuery = require('./handleQuery.js');
+const userHasHouseRole = require('./utilities.js').userHasHouseRole;
 
 module.exports = {
     handleQuery,
