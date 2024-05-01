@@ -39,4 +39,4 @@ client.on('messageCreate', async message => {
     }
 });
 
-client.login('YOUR_DISCORD_TOKEN');
+client.login('DISCORD_TOKEN');
