@@ -62,7 +62,7 @@ async function queryCharacter(character, userMessage, message) {
         }
 
         // Prompt to instruct OpenAI to respond in the voice of the specified character
-        const prompt = `User: ${userMessage}\nAI: Respond in the voice of ${characterFullName} from the Harry Potter series:`;
+        const prompt = `User: ${userMessage}\nAI: Respond in the voice of ${characterFullName} from the Harry Potter series in 200 characters or less:`;
 
         // Send completion request to OpenAI
         const completion = await openai.chat.completions.create({
