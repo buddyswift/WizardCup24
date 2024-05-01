@@ -29,6 +29,30 @@ client.on('messageCreate', async message => {
         }
         // Call the handleQuery function with the user message and the message object
         await handleQuery(message, userMessage);
+    } else if (command.toLowerCase() === '!commands') {
+        // List all available commands and their descriptions
+        const commandsList = [
+            { name: '!ask', description: 'Ask a question to the bot.' },
+            { name: '!commands', description: 'List all available commands and their descriptions.' },
+            { name: '!malfoy', description: 'Interact with Draco Malfoy.' },
+            { name: '!dumbledore', description: 'Interact with Albus Dumbledore.' },
+            { name: '!hagrid', description: 'Interact with Rubeus Hagrid.' },
+            { name: '!dobby', description: 'Interact with Dobby the House Elf.' },
+            { name: '!filch', description: 'Interact with Argus Filch.' },
+            { name: '!baron', description: 'Interact with the Bloody Baron.' },
+            { name: '!nick', description: 'Interact with Nearly Headless Nick.' },
+            { name: '!lockhart', description: 'Interact with Gilderoy Lockhart.' },
+            { name: '!mcgonagall', description: 'Interact with Minerva McGonagall.' },
+            { name: '!snape', description: 'Interact with Severus Snape.' },
+            { name: '!sprout', description: 'Interact with Pomona Sprout.' },
+            { name: '!flitwick', description: 'Interact with Filius Flitwick.' }
+        ];
+
+        // Format the commands list
+        const formattedCommands = commandsList.map(cmd => `${cmd.name}: ${cmd.description}`).join('\n');
+
+        // Send the list of commands to the user
+        message.channel.send('List of available commands:\n' + formattedCommands);
     } else if (command.startsWith('!')) {
         // Extract the character command from the message
         const characterCommand = command.toLowerCase().slice(1); // Remove the '!' prefix
