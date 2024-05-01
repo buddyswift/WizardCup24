@@ -1,6 +1,7 @@
-require('dotenv').config();
+// index.js
 const { Client, GatewayIntentBits } = require('discord.js');
-const npcChat = require('./npcchat/npcchat'); // Import NPC chat module
+const { handleQuery } = require('./handleQuery');
+const { queryCharacter } = require('./characterQuery');
 
 const client = new Client({
     intents: [
@@ -16,10 +17,26 @@ client.once('ready', () => {
 
 client.on('messageCreate', async message => {
     if (message.author.bot) return; // Ignore messages from bots
-    if (message.content.startsWith('!ask')) {
-        npcChat.handleQuery(message); // Delegate to the npcChat module
+
+    const [command, ...args] = message.content.trim().split(/\s+/); // Split message into command and arguments
+    if (command.toLowerCase() === '!ask') {
+        const userMessage = args.join(' '); // Join the arguments as the user message
+        if (!userMessage) {
+            message.channel.send('Please provide a message.');
+            return;
+        }
+        // Call the handleQuery function with the user message
+        await handleQuery(userMessage, message);
+    } else {
+        const characterCommand = command.toLowerCase(); // Extract the command as the character name
+        const userMessage = args.join(' '); // Join the arguments as the user message
+        if (!characterCommand || !userMessage) {
+            message.channel.send('Please provide a character name and a message.');
+            return;
+        }
+        // Call the queryCharacter function with the character command and user message
+        await queryCharacter(characterCommand, userMessage, message);
     }
-    // Additional handlers for other commands can be added here
 });
 
-client.login(process.env.DISCORD_TOKEN);
+client.login('YOUR_DISCORD_TOKEN');
