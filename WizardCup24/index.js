@@ -1,6 +1,6 @@
 // index.js
 const { Client, GatewayIntentBits } = require('discord.js');
-const { handleQuery } = require('.handleQuery.js');
+const { handleQuery } = require('./handleQuery.js');
 console.log(typeof handleQuery);
 
 const { queryCharacter } = require('./characterQuery.js');
