@@ -1,6 +1,8 @@
 // index.js
 const { Client, GatewayIntentBits } = require('discord.js');
 const { handleQuery } = require('./npcChat/handleQuery.js');
+console.log(typeof handleQuery);
+
 const { queryCharacter } = require('./npcChat/characterQuery.js');
 
 const client = new Client({
