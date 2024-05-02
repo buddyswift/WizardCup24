@@ -87,9 +87,12 @@ client.on('messageCreate', async message => {
         // Format and send the commands list
         const formattedCommands = commandsList.map(cmd => `${cmd.name}: ${cmd.description}`).join('\n');
         message.channel.send('List of available commands:\n' + formattedCommands);
+    } if (message.content.startsWith("!")) {
+        // Handle recognized commands
+        message.channel.send("Command not recognized. Use `!commands` to see the list of available commands.");
     } else {
         // Handle unrecognized commands
-        message.channel.send("Command not recognized. Use `!commands` to see the list of available commands.");
+        
     }
 });
 
