@@ -3,7 +3,6 @@
 require('dotenv').config();
 const { userHasHouseRole, main } = require('./utilities.js'); // Import utilities
 const { getHouseTask } = require('./lessons.js'); // Import the getHouseTask function
-const { EmbedBuilder } = require('discord.js');
 const OpenAI = require("openai");
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
@@ -36,17 +35,7 @@ async function handleQuery(message) {
     }
 }
 
-// Function to get the user's Hogwarts house role
-function getHogwartsHouseRole(rolesCache) {
-    // Loop through the user's roles to find the Hogwarts house role
-    for (const [_, role] of rolesCache) {
-        const roleName = role.name;
-        if (roleName === 'Gryffindor' || roleName === 'Hufflepuff' || roleName === 'Ravenclaw' || roleName === 'Slytherin') {
-            return roleName;
-        }
-    }
-    // Default to null if no Hogwarts house role is found
-    return null;
-}
 
-module.exports = { handleQuery, getHogwartsHouseRole };
+
+
+module.exports = { handleQuery };

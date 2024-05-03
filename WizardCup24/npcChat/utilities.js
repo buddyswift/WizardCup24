@@ -72,7 +72,21 @@ async function main(userMessage, message, rolename) {
     }
 }
 
+// Function to get the user's Hogwarts house role
+function getHogwartsHouseRole(rolesCache) {
+    // Loop through the user's roles to find the Hogwarts house role
+    for (const [_, role] of rolesCache) {
+        const roleName = role.name;
+        if (roleName === 'Gryffindor' || roleName === 'Hufflepuff' || roleName === 'Ravenclaw' || roleName === 'Slytherin') {
+            return roleName;
+        }
+    }
+    // Default to null if no Hogwarts house role is found
+    return null;
+}
+
 module.exports = {
     userHasHouseRole,
-    main
+    main,
+    getHogwartsHouseRole
 };
