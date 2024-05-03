@@ -29,10 +29,6 @@ async function queryCharacter(character, userMessage, message) {
                 thumbnailUrl = 'https://static.wikia.nocookie.net/harrypotter/images/c/c8/Mainfulcd.jpg/revision/latest?cb=20200413210532';
                 characterFullName = 'Argus Filch';
                 break;
-            case 'baron':
-                thumbnailUrl = 'https://static.wikia.nocookie.net/harrypotter/images/5/55/Bloody_Baron.jpg/revision/latest?cb=20100408172210';
-                characterFullName = 'Bloody Baron';
-                break;
             case 'nick':
                 thumbnailUrl = 'https://static.wikia.nocookie.net/harrypotter/images/6/6d/Nicholas_de_Mimsy-Porpington.png/revision/latest?cb=20200515191831';
                 characterFullName = 'Nearly Headless Nick';

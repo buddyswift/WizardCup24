@@ -68,7 +68,7 @@ async function main(userMessage, message, rolename) {
 
     } catch (error) {
         console.error('Error contacting OpenAI:', error);
-        message.channel.send('Error contacting OpenAI. Please try again later.');
+        return
     }
 }
 

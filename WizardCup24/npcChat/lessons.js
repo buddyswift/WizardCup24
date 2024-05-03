@@ -78,6 +78,8 @@ function createEmbed(task, houseDescription) {
     return { embeds: [embed] };
 }
 
+
+
 async function completeLesson(roles) {
     const userRole = getHogwartsHouseRole(roles);
     try {
@@ -89,7 +91,7 @@ async function completeLesson(roles) {
             .single();  // Assuming each house should only have one active lesson at a time
 
         if (activeError) {
-            console.error('Error checking active lesson:', activeError.message);
+            console.error('Error checking active lesson:', activeError.message)
             return 'No active lesson available to complete.';
         }
 

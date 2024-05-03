@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits} = require('discord.js');
 const queryCharacter = require('./npcChat/characterQuery.js');
 const { getHouseTask, completeLesson, getHousePoints } = require('./npcChat/lessons.js');
-const { handleQuery } = require('./npcChat/handleQuery.js');
+const  { handleQuery } = require('./npcChat/handlequery.js');
 const {getHogwartsHouseRole} = require('./npcChat/utilities.js');
 const { EmbedBuilder } = require('discord.js');
 
@@ -65,6 +65,19 @@ client.on('messageCreate', async message => {
         const userRole = getHogwartsHouseRole(message.member.roles.cache);
         
         switch (command.toLowerCase()) {
+            case '!ask':
+                // Call the handleQuery function with the user message and the message object
+                await handleQuery(message, userMessage);
+                break;
+            case '!lessoncomplete':
+                const isPrefect = message.member.roles.cache.some(role => role.name === 'Prefect');
+                if (!isPrefect) {
+                    message.channel.send('You need to be a Prefect to complete a lesson.');
+                    return;
+                }
+                const completionResponse = await completeLesson(message.member.roles.cache);
+                message.channel.send(completionResponse);
+                break;
             case '!lesson':
                 
                 // Call the getHouseTask function with the user's role
@@ -79,7 +92,7 @@ client.on('messageCreate', async message => {
                 }
                 break;
             case '!housepoints':
-                    const userRole = getHogwartsHouseRole(message.member.roles.cache);
+                    
                     if (!userRole) {
                         message.channel.send('You must be part of a Hogwarts house to use this command.');
                         return;
@@ -107,7 +120,7 @@ client.on('messageCreate', async message => {
                 
                     message.channel.send({ embeds: [embed] });
                 break;
-                
+              
             default:
                 // Call the queryCharacter function with the command, user message, and message object
                 await queryCharacter(matchingCommand.name.slice(1), userMessage, message); // Pass matchingCommand.name.slice(1) to remove the prefix
