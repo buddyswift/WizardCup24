@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits} = require('discord.js');
 const queryCharacter = require('./npcChat/characterQuery.js');
 const { getHouseTask, completeLesson, getHousePoints } = require('./npcChat/lessons.js');
-const  { handleQuery } = require('./npcChat/handlequery.js');
+const { handleQuery } = require('./npcChat/handleQuery.js');
 const {getHogwartsHouseRole} = require('./npcChat/utilities.js');
 const { EmbedBuilder } = require('discord.js');
 
