@@ -85,6 +85,7 @@ function getHogwartsHouseRole(rolesCache) {
     return null;
 }
 
+
 module.exports = {
     userHasHouseRole,
     main,

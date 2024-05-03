@@ -81,6 +81,22 @@ function createEmbed(task, houseDescription) {
 async function completeLesson(roles) {
     const userRole = getHogwartsHouseRole(roles);
     try {
+        // First, check if there is an active lesson
+        const { data: activeLesson, error: activeError } = await supabase
+            .from('Lessons')
+            .select('*')
+            .eq(`${userRole[0].toLowerCase()}Status`, 1)
+            .single();  // Assuming each house should only have one active lesson at a time
+
+        if (activeError) {
+            console.error('Error checking active lesson:', activeError.message);
+            return 'No active lesson available to complete.';
+        }
+
+        if (!activeLesson) {
+            return 'No active lesson available to complete.';
+        }
+        // Proceed to mark the lesson as complete by setting the status to 2
         const { error } = await supabase
             .from('Lessons')
             .update({ [`${userRole[0].toLowerCase()}Status`]: 2 }) // This dynamically targets the status field based on the userRole
@@ -89,11 +105,75 @@ async function completeLesson(roles) {
             console.error('Error completing lesson:', error.message);
             return 'Failed to complete the lesson.';
         }
-        return 'Lesson marked as complete!';
+        // Fetch current house points
+        const { data: pointsData, error: pointsError } = await supabase
+            .from('HousePoints')
+            .select('Housepoints')
+            .eq('House', userRole);
+
+        if (pointsError) {
+            console.error('Error fetching house points:', pointsError.message);
+            return 'Failed to fetch house points.';
+        }
+
+        if (pointsData.length > 0) {
+            const currentPoints = pointsData[0].Housepoints;
+            const newPoints = currentPoints + 50;
+        
+            // Update the house points
+            const { error: updateError } = await supabase
+                .from('HousePoints')
+                .update({ Housepoints: newPoints })
+                .eq('House', userRole);
+        
+            if (updateError) {
+                console.error('Error updating house points:', updateError.message);
+                return 'Failed to update house points.';
+            }
+        } else {
+            console.error('No points data found for the house.');
+            // Optionally, initialize points for the house if none exist
+            const { error: initError } = await supabase
+                .from('HousePoints')
+                .insert({ House: userRole, Housepoints: 50 });
+        
+            if (initError) {
+                console.error('Error initializing house points:', initError.message);
+                return 'Failed to initialize house points.';
+            }
+            return 'House points initialized with the first 50 points.';
+        }
+        
+
+        return 'Lesson marked as complete and points added!';
     } catch (error) {
         console.error('Error in completeLesson:', error);
         return 'An error occurred while completing the lesson.';
     }
 }
 
-module.exports = { getHouseTask, completeLesson };
+async function getHousePoints(userRole) {
+    try {
+        const { data, error } = await supabase
+            .from('HousePoints')
+            .select('Housepoints')
+            .eq('House', userRole)
+            .single();
+
+        if (error) {
+            console.error('Error fetching house points:', error.message);
+            return `Failed to fetch points for ${userRole}.`;
+        }
+
+        if (data) {
+            return { house: userRole, points: data.Housepoints };
+        } else {
+            return { error: `No points data found for ${userRole}.` };
+        }
+    } catch (error) {
+        console.error('Error in getHousePoints:', error);
+        return { error: 'An error occurred while fetching house points.' };
+    }
+}
+
+module.exports = { getHouseTask, completeLesson ,getHousePoints };

@@ -1,22 +1,25 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits} = require('discord.js');
 const queryCharacter = require('./npcChat/characterQuery.js');
-const {getHouseTask , completeLesson} = require('./npcChat/lessons.js');
+const { getHouseTask, completeLesson, getHousePoints } = require('./npcChat/lessons.js');
 const { handleQuery } = require('./npcChat/handleQuery.js');
 const {getHogwartsHouseRole} = require('./npcChat/utilities.js');
+const { EmbedBuilder } = require('discord.js');
+
+
 
 
 // Define the commands list outside of the event handler
 const commandsList = [
-    { name: '!ask', description: 'Ask a question of your housemaster.' },
-    { name: '!lesson', description: 'Get the current lesson for your house.' },
+    { name: '!ask', description: 'Ask a question of your Housemaster.' },
+    { name: '!housepoints', description: 'Check the current Housepoints for your House.' },
+    { name: '!lesson', description: 'Get the current lesson for your House.' },
     { name: '!lessoncomplete', description: 'Mark the current lesson as complete (Prefect role only).' },
     { name: '!malfoy', description: 'Interact with Draco Malfoy.' },
     { name: '!dumbledore', description: 'Interact with Albus Dumbledore.' },
     { name: '!hagrid', description: 'Interact with Rubeus Hagrid.' },
     { name: '!dobby', description: 'Interact with Dobby the House Elf.' },
     { name: '!filch', description: 'Interact with Argus Filch.' },
-    { name: '!baron', description: 'Interact with the Bloody Baron.' },
     { name: '!nick', description: 'Interact with Nearly Headless Nick.' },
     { name: '!lockhart', description: 'Interact with Gilderoy Lockhart.' },
     { name: '!mcgonagall', description: 'Interact with Minerva McGonagall.' },
@@ -52,17 +55,18 @@ client.on('messageCreate', async message => {
         const userMessage = args.join(' '); // Join the arguments as the user message
         
         // Apply the user message check only for !ask and character interaction commands
-        if (['!ask', '!malfoy', '!dumbledore', '!hagrid', '!dobby', '!filch', '!baron', '!nick', '!lockhart', '!mcgonagall', '!snape', '!sprout', '!flitwick'].includes(command.toLowerCase())) {
+        if (['!ask', '!malfoy', '!dumbledore', '!hagrid', '!dobby', '!filch', '!nick', '!lockhart', '!mcgonagall', '!snape', '!sprout', '!flitwick'].includes(command.toLowerCase())) {
             if (!userMessage) {
                 message.channel.send('Please provide a message.');
                 return;
             }
         }
+        // Retrieve the user's Hogwarts house role       
+        const userRole = getHogwartsHouseRole(message.member.roles.cache);
         
         switch (command.toLowerCase()) {
             case '!lesson':
-                // Retrieve the user's Hogwarts house role
-                const userRole = getHogwartsHouseRole(message.member.roles.cache);
+                
                 // Call the getHouseTask function with the user's role
                 const lessonEmbedResponse = await getHouseTask(userRole);
                 // Access the first embed in the array
@@ -74,19 +78,36 @@ client.on('messageCreate', async message => {
                     throw new Error('Embed is undefined or not formatted correctly.');
                 }
                 break;
-            case '!ask':
-                // Call the handleQuery function with the user message and the message object
-                await handleQuery(message, userMessage);
+            case '!housepoints':
+                    const userRole = getHogwartsHouseRole(message.member.roles.cache);
+                    if (!userRole) {
+                        message.channel.send('You must be part of a Hogwarts house to use this command.');
+                        return;
+                    }
+                    const pointsResult = await getHousePoints(userRole);
+                    if (pointsResult.error) {
+                        message.channel.send(pointsResult.error);
+                        return;
+                    }
+                
+                    // Define thumbnails for each house
+                    const houseThumbnails = {
+                        Gryffindor: 'https://static.wikia.nocookie.net/harrypotter/images/b/b1/Gryffindor_ClearBG.png/revision/latest?cb=20190222162949',
+                        Slytherin: 'https://static.wikia.nocookie.net/harrypotter/images/0/00/Slytherin_ClearBG.png/revision/latest?cb=20161020182557',
+                        Ravenclaw: 'https://static.wikia.nocookie.net/harrypotter/images/7/71/Ravenclaw_ClearBG.png/revision/latest?cb=20161020182442',
+                        Hufflepuff: 'https://static.wikia.nocookie.net/harrypotter/images/0/06/Hufflepuff_ClearBG.png/revision/latest?cb=20161020182518'
+                    };
+                
+                    const embed = new EmbedBuilder()
+                        .setColor('#0099ff') // You can customize the color per house if desired
+                        .setTitle(`${pointsResult.house} House Points`)
+                        .setDescription(`The ${pointsResult.house} House currently has ${pointsResult.points} points.`)
+                        .setThumbnail(houseThumbnails[pointsResult.house])
+                        .setTimestamp();
+                
+                    message.channel.send({ embeds: [embed] });
                 break;
-            case '!lessoncomplete':
-                const isPrefect = message.member.roles.cache.some(role => role.name === 'Prefect');
-                if (!isPrefect) {
-                    message.channel.send('You need to be a Prefect to complete a lesson.');
-                    return;
-                }
-                const completionResponse = await completeLesson(message.member.roles.cache);
-                message.channel.send(completionResponse);
-                break;
+                
             default:
                 // Call the queryCharacter function with the command, user message, and message object
                 await queryCharacter(matchingCommand.name.slice(1), userMessage, message); // Pass matchingCommand.name.slice(1) to remove the prefix
