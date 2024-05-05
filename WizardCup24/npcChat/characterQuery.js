@@ -23,7 +23,11 @@ async function queryCharacter(character, userMessage, message) {
                 break;
             case 'dobby':
                 thumbnailUrl = 'https://static.wikia.nocookie.net/harrypotter/images/8/82/Dobby.jpg/revision/latest?cb=20230712061949';
-                characterFullName = 'Dobby';
+                characterFullName = 'Dobby the Free Elf';
+                break;
+            case 'luna':
+                thumbnailUrl = 'https://static.wikia.nocookie.net/harrypotter/images/3/30/Harry-potter-and-the-half--blood-prince-Luna.jpg/revision/latest?cb=20140521113232';
+                characterFullName = 'Luna Lovegood';
                 break;
             case 'filch':
                 thumbnailUrl = 'https://static.wikia.nocookie.net/harrypotter/images/c/c8/Mainfulcd.jpg/revision/latest?cb=20200413210532';

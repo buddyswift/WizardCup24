@@ -21,6 +21,7 @@ const commandsList = [
     { name: '!dobby', description: 'Interact with Dobby the House Elf.' },
     { name: '!filch', description: 'Interact with Argus Filch.' },
     { name: '!nick', description: 'Interact with Nearly Headless Nick.' },
+    { name: '!luna', description: 'Interact with Luna Lovegood.' },
     { name: '!lockhart', description: 'Interact with Gilderoy Lockhart.' },
     { name: '!mcgonagall', description: 'Interact with Minerva McGonagall.' },
     { name: '!snape', description: 'Interact with Severus Snape.' },
@@ -55,7 +56,7 @@ client.on('messageCreate', async message => {
         const userMessage = args.join(' '); // Join the arguments as the user message
         
         // Apply the user message check only for !ask and character interaction commands
-        if (['!ask', '!malfoy', '!dumbledore', '!hagrid', '!dobby', '!filch', '!nick', '!lockhart', '!mcgonagall', '!snape', '!sprout', '!flitwick'].includes(command.toLowerCase())) {
+        if (['!ask', '!malfoy', '!dumbledore', '!hagrid', '!dobby', '!filch', '!nick', '!luna' '!lockhart', '!mcgonagall', '!snape', '!sprout', '!flitwick'].includes(command.toLowerCase())) {
             if (!userMessage) {
                 message.channel.send('Please provide a message.');
                 return;
