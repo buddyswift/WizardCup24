@@ -103,7 +103,14 @@ client.on('messageCreate', async message => {
                         message.channel.send(pointsResult.error);
                         return;
                     }
-                
+                    
+                    // Define colors for each house
+                    const houseColors = {
+                        Gryffindor: '#FF0000', // Red
+                        Slytherin: '#00FF00', // Green
+                        Ravenclaw: '#0000FF', // Blue
+                        Hufflepuff: '#FFFF00' // Yellow
+                    };
                     // Define thumbnails for each house
                     const houseThumbnails = {
                         Gryffindor: 'https://static.wikia.nocookie.net/harrypotter/images/b/b1/Gryffindor_ClearBG.png/revision/latest?cb=20190222162949',
@@ -113,7 +120,7 @@ client.on('messageCreate', async message => {
                     };
                 
                     const embed = new EmbedBuilder()
-                        .setColor('#0099ff') // You can customize the color per house if desired
+                        .setColor(houseColors[pointsResult.house]) // Set color based on the house
                         .setTitle(`${pointsResult.house} House Points`)
                         .setDescription(`The ${pointsResult.house} House currently has ${pointsResult.points} points.`)
                         .setThumbnail(houseThumbnails[pointsResult.house])
