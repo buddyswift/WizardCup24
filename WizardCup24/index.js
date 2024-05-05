@@ -56,7 +56,7 @@ client.on('messageCreate', async message => {
         const userMessage = args.join(' '); // Join the arguments as the user message
         
         // Apply the user message check only for !ask and character interaction commands
-        if (['!ask', '!malfoy', '!dumbledore', '!hagrid', '!dobby', '!filch', '!nick', '!luna' '!lockhart', '!mcgonagall', '!snape', '!sprout', '!flitwick'].includes(command.toLowerCase())) {
+        if (['!ask', '!malfoy', '!dumbledore', '!hagrid', '!dobby', '!filch', '!nick', '!luna', '!lockhart', '!mcgonagall', '!snape', '!sprout', '!flitwick'].includes(command.toLowerCase())) {
             if (!userMessage) {
                 message.channel.send('Please provide a message.');
                 return;
