@@ -1,7 +1,7 @@
 // utilities.js
 require('dotenv').config();
-const OpenAI = require("openai");
 const { EmbedBuilder } = require('discord.js');
+const OpenAI = require("openai");
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
 // Function to check if the user has a specific house role
