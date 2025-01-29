@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const queryCharacter = require('./npcChat/characterQuery.js');
 const { getHouseTask, completeLesson, getHouseProgress } = require('./npcChat/lessons.js');

@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 const { getHogwartsHouseRole } = require('./utilities.js');
 const { getHouseTask } = require('./lessons.js');
 const OpenAI = require("openai");

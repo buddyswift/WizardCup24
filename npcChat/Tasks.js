@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 const { EmbedBuilder } = require('discord.js');
 const { createClient } = require('@supabase/supabase-js');
 const { Client, GatewayIntentBits } = require('discord.js');

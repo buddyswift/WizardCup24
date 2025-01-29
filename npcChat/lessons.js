@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 const { createClient } = require('@supabase/supabase-js');
 const { EmbedBuilder } = require('discord.js');
 const { getHogwartsHouseRole } = require('./utilities.js');
