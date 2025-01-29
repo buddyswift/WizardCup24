@@ -67,13 +67,13 @@ async function queryCharacter(character, userMessage, message) {
         const { fullName, thumbnailUrl } = characterData;
 
         // Construct the prompt for OpenAI
-        const prompt = `User: ${userMessage}\nAI: Respond in the voice of ${fullName} from the Harry Potter series in 200 characters or less:`;
+        const prompt = `User: ${userMessage}\nAI: Respond in the voice of ${fullName} from the Harry Potter series in 400 characters or less:`;
 
         // Call OpenAI API to generate the response
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'user', content: userMessage }, { role: 'assistant', content: prompt }],
             model: 'gpt-3.5-turbo',
-            max_tokens: 100,
+            max_tokens: 200,
             temperature: 0.7
         });
 

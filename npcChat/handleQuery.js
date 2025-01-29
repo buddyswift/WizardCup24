@@ -46,7 +46,7 @@ async function handleQuery(message) {
             User's question: ${query}
 
             Respond in the voice of the housemaster of ${userRole} House, in character as if they are speaking directly to the user. 
-            Keep the response concise and under 1024 characters while still providing all necessary details.
+            Keep the response concise and under 1524 characters while still providing all necessary details.
         `;
 
         // Request to OpenAI for a response
@@ -56,7 +56,7 @@ async function handleQuery(message) {
                 { role: "user", content: prompt }
             ],
             model: "gpt-3.5-turbo",
-            max_tokens: 300,
+            max_tokens: 600,
             temperature: 0.7
         });
 
