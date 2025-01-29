@@ -89,6 +89,16 @@ async function getHouseTask(userRole) {
                 console.error("Error updating task status:", updateError);
                 return { embeds: [], content: "Failed to assign new task." };
             }
+            
+            // Log task assignment in TaskAssignments table
+            const { error: logError } = await supabase
+            .from('TaskAssignments')
+            .insert({ house: userRole, task_id: randomTask.Key, assigned_at: new Date() });
+
+            if (logError) {
+                console.error("Error logging task assignment:", logError);
+            }
+
 
             // Log task assignment and return task details
             const embed = new EmbedBuilder()
