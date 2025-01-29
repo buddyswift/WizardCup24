@@ -26,14 +26,12 @@ async function getHouseTask(userRole) {
     };
 
     try {
-        const currentTime = new Date().getTime(); // Get current time in milliseconds
-
         // Fetch active lessons where status = 1 (active)
         const { data: activeTasks, error: activeError } = await supabase
             .from('Lessons')
             .select('*')
             .eq(`${userRole[0].toLowerCase()}Status`, 1)  // Filter for active tasks (status = 1)
-            .limit(1);  // Limit to only the first active task (should only be one active task at a time)
+            .limit(1);  // Limit to only the first active task
 
         if (activeError) {
             console.error("Error fetching active tasks:", activeError);
@@ -63,92 +61,8 @@ async function getHouseTask(userRole) {
             return { embeds: [embed] };
         }
 
-        // If no active task found, check for recent assignments and show cooldown
-        const { data: recentAssignments, error: recentError } = await supabase
-            .from('TaskAssignments')
-            .select('assigned_at')
-            .eq('house', userRole)
-            .order('assigned_at', { ascending: false })
-            .limit(1);  // Fetch the most recent assignment
-
-        if (recentError) {
-            console.error("Error checking recent task assignments:", recentError);
-            return { embeds: [], content: "An error occurred while checking task limits." };
-        }
-
-        if (recentAssignments.length > 0) {
-            const lastAssignedTime = new Date(recentAssignments[0].assigned_at);
-            const nextAvailableTime = new Date(lastAssignedTime.getTime() + 2 * 60 * 60 * 1000); // Add 2 hours to the last assigned time
-
-            // If the cooldown has expired, assign a new task
-            if (nextAvailableTime <= currentTime) {
-                console.log("Cooldown has expired. Assigning a new task...");
-
-                const houseKey = `${userRole[0].toLowerCase()}Status`;
-
-                // Fetch available tasks
-                const { data: allTasks, error: allError } = await supabase
-                    .from('Lessons')
-                    .select('*')
-                    .or(`${houseKey}.eq.0,${houseKey}.is.null`);
-
-                if (allError) {
-                    console.error("Error fetching available tasks:", allError);
-                    return { embeds: [], content: "An error occurred while fetching tasks." };
-                }
-
-                if (allTasks && allTasks.length > 0) {
-                    const randomTask = allTasks[Math.floor(Math.random() * allTasks.length)];
-
-                    // Fetch the image URL for the task dynamically from Supabase
-                    const taskImage = randomTask.Image || 'https://example.com/default-task-image.png'; // Fallback image if none exists
-
-                    // Assign the task to the house
-                    const { error: updateError } = await supabase
-                        .from('Lessons')
-                        .update({ [houseKey]: 1 })  // Mark the task as assigned (status = 1)
-                        .eq('Key', randomTask.Key);
-
-                    if (updateError) {
-                        console.error("Error updating task status:", updateError);
-                        return { embeds: [], content: "Failed to assign new task." };
-                    }
-
-                    // Log the task assignment in TaskAssignments table
-                    const { error: logError } = await supabase
-                        .from('TaskAssignments')
-                        .insert({ house: userRole, task_id: randomTask.Key });
-
-                    if (logError) {
-                        console.error("Error logging task assignment:", logError);
-                    }
-
-                    // Create and return the embed for the new task
-                    const embed = new EmbedBuilder()
-                        .setColor(houseColors[userRole]) // Use the color based on the house
-                        .setTitle(`${userRole} House - New Lesson`)
-                        .setDescription(`A new lesson is available for ${userRole} House: ${randomTask.Subject}`)
-                        .setThumbnail(taskImage) // Set the lesson image dynamically from Supabase
-                        .addFields(
-                            { name: 'Class', value: randomTask.Class || 'N/A', inline: true },
-                            { name: 'Teacher', value: randomTask.Teacher || 'N/A', inline: true },
-                            { name: 'Subject', value: randomTask.Subject || 'N/A', inline: true },
-                            { name: 'Task', value: randomTask.Task || 'N/A', inline: false }
-                        )
-                        .setTimestamp();
-
-                    return { embeds: [embed] };
-                }
-            }
-
-            // Return the Unix timestamp for the next available time
-            const unixTimestamp = Math.floor(nextAvailableTime.getTime() / 1000); // Convert to Unix timestamp (seconds)
-            return { content: `Next lesson available <t:${unixTimestamp}:R>` };
-        }
-
-        // If no recent assignment found, fetch available tasks
+        // If no active task found, check for available tasks
         const houseKey = `${userRole[0].toLowerCase()}Status`;
-
         const { data: allTasks, error: allError } = await supabase
             .from('Lessons')
             .select('*')
@@ -165,11 +79,22 @@ async function getHouseTask(userRole) {
             // Fetch the image URL for the task dynamically from Supabase
             const taskImage = randomTask.Image || 'https://example.com/default-task-image.png'; // Fallback image if none exists
 
-            // Create the embed for the available task with the associated house color
+            // Assign the task to the house (status = 1)
+            const { error: updateError } = await supabase
+                .from('Lessons')
+                .update({ [`${userRole[0].toLowerCase()}Status`]: 1 })  // Mark as active (status = 1)
+                .eq('Key', randomTask.Key);
+
+            if (updateError) {
+                console.error("Error updating task status:", updateError);
+                return { embeds: [], content: "Failed to assign new task." };
+            }
+
+            // Log task assignment and return task details
             const embed = new EmbedBuilder()
-                .setColor(houseColors[userRole]) // Use the color based on the house
+                .setColor(houseColors[userRole])
                 .setTitle(`${userRole} House - New Lesson`)
-                .setDescription(`A new lesson is available for ${userRole} House: ${randomTask.Task}`)
+                .setDescription(`A new lesson is available for ${userRole} House: ${randomTask.Subject}`)
                 .setThumbnail(taskImage) // Set the lesson image dynamically from Supabase
                 .addFields(
                     { name: 'Class', value: randomTask.Class || 'N/A', inline: true },
@@ -189,6 +114,7 @@ async function getHouseTask(userRole) {
         return { embeds: [], content: "An error occurred while fetching tasks." };
     }
 }
+
 
 
 
@@ -235,7 +161,7 @@ async function completeLesson(roles) {
             return 'Failed to complete the lesson.';
         }
 
-        // Update house points
+        // Update house points (if applicable)
         const { data: pointsData, error: pointsError } = await supabase
             .from('HousePoints')
             .select('Housepoints')
@@ -267,6 +193,7 @@ async function completeLesson(roles) {
         return 'An error occurred while completing the lesson.';
     }
 }
+
 
 
 

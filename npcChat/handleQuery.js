@@ -9,7 +9,7 @@ const faqs = [
     { question: "How does the event work?", answer: "The Wizard Cup is a week-long competition where players are sorted into Houses and compete in tasks to earn points. The House with the most points wins the Cup." },
     { question: "When does the event run?", answer: "The competition runs from 31st January to 9th February 2025." },
     { question: "Can I choose my house?", answer: "The Sorting Hat chooses your house. You cannot pick your own house." },
-    { question: "How can I prepare for the Wizard's Cup?", answer: "Stack Slayer Points, hold Hespori and Tears of Guthix, and ensure you have enough supplies. Having a Barrows or Gauntlet chest ready is helpful. No restrictions on clue stacking or minigame rewards this time, so go wild!" },
+    { question: "How can I prepare for the Wizard's Cup?", answer: "Stack Slayer Points, hold Hespori and Tears of Guthix, and ensure you have enough supplies. Having a Barrows, Moons and Gauntlet chest ready is helpful. No restrictions on clue stacking or minigame rewards this time, so go wild!" },
     { question: "What plugins do I need?", answer: "Make sure to have the 'Clan Events' Runelite plugin for timestamps and passwords. If you play on mobile, join your friends chat and change the chat name to the event password." },
     { question: "What is the event password?", answer: "The event password will be released at the start of the event." },
     { question: "What if I fail trial during the Wizards Cup?", answer: "Trialists who haven't passed by the 30-day mark will remain in the clan as trialists for the duration of the competition and can still earn votes from their housemates." },
