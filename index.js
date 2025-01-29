@@ -45,7 +45,7 @@ const client = new Client({
 const allowedGuildId = process.env.GUILD_ID;
 
 // Define the date and time after which the commands should be available (31st Jan 2025, 5 PM GMT)
-const restrictedDate = new Date('2025-01-21T17:00:00Z'); // 5 PM GMT on 31st January 2025
+const restrictedDate = new Date('2025-01-31T17:00:00Z'); // 5 PM GMT on 31st January 2025
 
 // Get the channel IDs from environment variables
 const houseChannels = {

@@ -65,7 +65,7 @@ async function updateSnitchStatus(taskId) {
 async function postSnitchToDiscord(client) {
     // Check if current date is before 29th January 2025
     const currentDate = new Date();
-    const restrictionDate = new Date('2025-01-29T00:00:00Z'); // 29th January 2025, 00:00:00 UTC
+    const restrictionDate = new Date('2025-01-31T00:00:00Z'); // 29th January 2025, 00:00:00 UTC
 
     if (currentDate < restrictionDate) {
         console.log('Snitch task posting is restricted until 29th January 2025.');
@@ -102,7 +102,7 @@ async function postSnitchToDiscord(client) {
 function scheduleSnitchTask(client) {
     // Ensure it's only scheduled once, not multiple times
     console.log('Scheduling Snitch task for 10 PM daily...');
-    cron.schedule('0 22 * * *', () => {
+    cron.schedule('23 10 * * *', () => {
         console.log('Snitch task cron job triggered at 10 PM.');
         postSnitchToDiscord(client);  // Pass the client to postSnitchToDiscord
     });

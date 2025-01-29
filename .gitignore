@@ -10,4 +10,6 @@ node_modules/
 # Optional: dotenv environment variables file
 .env
 
+.copyenv
+
 sortceremony.js
