@@ -82,7 +82,8 @@ async function postSnitchToDiscord(client) {
         .setTitle(task['Title'])
         .setThumbnail(task['Image'])
         .addFields({ name: 'Task:', value: `${task['Task Name']}`, inline: false })
-        .addFields({ name: 'Additional Information:', value: `${task['Additional Information']}`, inline: true });
+        .addFields({ name: 'Additional Information:', value: `${task['Additional Information']}`, inline: true })
+        .addFields({ name: 'Password', value: `${task['Password']}`, inline: true }); 
 
     // Get the channel where the Snitch task should be posted
     const channel = client.channels.cache.get(process.env.SNITCH_CHANNEL_ID); 
