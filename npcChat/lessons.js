@@ -29,7 +29,41 @@ async function getHouseTask(userRole) {
         // Fetch the current time
         const currentTime = new Date();
 
-        // Check if there is a recent task assignment
+        // First, check if there is an active lesson for the house
+        const houseKey = `${userRole[0].toLowerCase()}Status`;
+        const { data: activeLessons, error: activeError } = await supabase
+            .from('Lessons')
+            .select('*')
+            .eq(houseKey, 1);  // Look for active tasks where houseKey = 1
+
+        if (activeError) {
+            console.error("Error fetching active lessons:", activeError);
+            return { embeds: [], content: "An error occurred while fetching tasks." };
+        }
+
+        if (activeLessons.length > 0) {
+            // If there is an active lesson, return it without considering the cooldown
+            const activeLesson = activeLessons[0];
+            const taskImage = activeLesson.Image || 'https://example.com/default-task-image.png'; // Fallback image if none exists
+
+            // Create and return the embed for the active task
+            const embed = new EmbedBuilder()
+                .setColor(houseColors[userRole]) // Use the color based on the house
+                .setTitle(`${userRole} House - Current Lesson`)
+                .setDescription(`The current lesson for ${userRole} House is as follows`)
+                .setThumbnail(taskImage) // Set the lesson image dynamically from Supabase
+                .addFields(
+                    { name: 'Class', value: activeLesson.Class || 'N/A', inline: true },
+                    { name: 'Teacher', value: activeLesson.Teacher || 'N/A', inline: true },
+                    { name: 'Subject', value: activeLesson.Subject || 'N/A', inline: true },
+                    { name: 'Task', value: activeLesson.Task || 'N/A', inline: false }
+                )
+                .setTimestamp();
+
+            return { embeds: [embed] };
+        }
+
+        // If no active task found, check for cooldown and available random tasks
         const { data: recentAssignments, error: recentError } = await supabase
             .from('TaskAssignments')
             .select('assigned_at')
@@ -53,12 +87,11 @@ async function getHouseTask(userRole) {
             }
         }
 
-        // If no active task found or cooldown has expired, assign a new task
-        const houseKey = `${userRole[0].toLowerCase()}Status`;
+        // Fetch random task with houseKey = null (unassigned)
         const { data: allTasks, error: allError } = await supabase
             .from('Lessons')
             .select('*')
-            .or(`${houseKey}.eq.0,${houseKey}.is.null`);  // Fetch tasks where the status is 0 or null
+            .or(`${houseKey}.eq.0,${houseKey}.is.null`);  // Fetch tasks where houseKey is 0 or null
 
         if (allError) {
             console.error("Error fetching available tasks:", allError);
@@ -113,6 +146,7 @@ async function getHouseTask(userRole) {
         return { embeds: [], content: "An error occurred while fetching tasks." };
     }
 }
+
 
 
 async function completeLesson(roles) {
