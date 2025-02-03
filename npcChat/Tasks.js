@@ -10,7 +10,7 @@ const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
 // Create a Supabase client instance
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, { persistSession: false });
-
+//added line to redeploy
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
