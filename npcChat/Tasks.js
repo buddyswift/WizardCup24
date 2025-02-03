@@ -27,7 +27,7 @@ async function fetchTasks() {
         const { data: tasks, error } = await supabase
             .from('Tasks') // Replace with your actual table name
             .select('*')
-            .gt('Date', new Date().toLocaleDateString('en-US')) // Ensure we only fetch future tasks
+            .gte('Date', new Date().toLocaleDateString('en-US')) // Ensure we only fetch future tasks
             .order('Date', { ascending: true }); // Order by date
 
         if (error) {
