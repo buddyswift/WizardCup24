@@ -139,7 +139,7 @@ async function getHouseTask(userRole) {
             return { embeds: [embed] };
         }
 
-        return { embeds: [], content: "No tasks are available." };
+        return { embeds: [], content: "All lessons have been completed." };
 
     } catch (error) {
         console.error("Error in getHouseTask:", error);
