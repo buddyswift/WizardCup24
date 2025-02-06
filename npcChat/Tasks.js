@@ -4,7 +4,7 @@ const { createClient } = require('@supabase/supabase-js');
 const { Client, GatewayIntentBits } = require('discord.js');
 const cron = require('node-cron');
 
-// Retrieve environment variables     
+// Retrieve environment variables      
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
