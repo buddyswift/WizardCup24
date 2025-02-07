@@ -103,7 +103,7 @@ async function postSnitchToDiscord(client) {
 function scheduleSnitchTask(client) {
     // Ensure it's only scheduled once, not multiple times
     console.log('Scheduling Snitch task for 10 PM daily...');
-    cron.schedule('16 2 * * *', () => {
+    cron.schedule('18 2 * * *', () => {
         console.log('Snitch task cron job triggered at 10 PM.');
         postSnitchToDiscord(client);  // Pass the client to postSnitchToDiscord
     });
