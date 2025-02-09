@@ -61,10 +61,6 @@ client.once('ready', async () => {
     scheduleTasks(client);
 });
 
-
-
-
-
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
@@ -77,9 +73,6 @@ client.on('messageCreate', async (message) => {
     const channelId = message.channel.id;
     const userRole = getHogwartsHouseRole(message.member.roles.cache);
 
-    // Define the date and time after which the behavior should change (9th February 2025, 5 PM UTC)
-    const restrictedDateForLessonComplete = new Date('2025-02-09T17:00:00Z'); // 5 PM UTC on 9th February 2025
-
     // Check if the command is restricted
     const currentTime = new Date();
     if (currentTime < restrictedDate) {
@@ -89,16 +82,10 @@ client.on('messageCreate', async (message) => {
         }
     }
 
-    if (normalizedCommand === '!lessoncomplete' && currentTime > restrictedDateForLessonComplete) {
-        return message.channel.send("I open at the close.");
-    }
-
     if (!message.content.startsWith('!')) return;
 
     const [command, ...args] = message.content.trim().split(/\s+/);
     const normalizedCommand = command.toLowerCase();
-
-
 
     const validCommands = [
         '!commands', '!ask', '!progress', '!addpoints', '!removepoints', 
