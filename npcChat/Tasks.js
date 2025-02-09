@@ -30,7 +30,7 @@ async function fetchTasks() {
             .gte('Date', new Date().toLocaleDateString('en-US')) // Ensure we only fetch future tasks
             .order('Date', { ascending: true }); // Order by date
 
-        if (error) { 
+        if (error) {  
             console.error('Error fetching tasks:', error.message);
             return [];
         }
