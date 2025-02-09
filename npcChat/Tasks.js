@@ -21,7 +21,7 @@ const client = new Client({
 });
 
 // Function to fetch tasks from Supabase based on scheduled date and time
-async function fetchTasks() {
+async function fetchTasks() { 
     try {
         console.log('Fetching tasks...');
         const { data: tasks, error } = await supabase
