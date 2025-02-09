@@ -44,9 +44,6 @@ const client = new Client({
 // Fetch the allowed guild ID from environment variables
 const allowedGuildId = process.env.GUILD_ID;
 
-// Define the date and time after which the commands should be available (31st Jan 2025, 5 PM GMT)
-const restrictedDate = new Date('2025-01-31T17:00:00Z'); // 5 PM GMT on 31st January 2025
-
 // Get the channel IDs from environment variables
 const houseChannels = {
     gryffindor: process.env.GRYFFINDOR_CHANNEL,
@@ -54,6 +51,9 @@ const houseChannels = {
     ravenclaw: process.env.RAVENCLAW_CHANNEL,
     hufflepuff: process.env.HUFFLEPUFF_CHANNEL
 };
+
+// Define the restricted dates for the lessoncomplete command
+const restrictedDateForLessonComplete = new Date('2025-02-09T17:00:00Z'); // 5 PM UTC on 9th February 2025
 
 client.once('ready', async () => {
     console.log('Bot is ready!');
@@ -73,19 +73,17 @@ client.on('messageCreate', async (message) => {
     const channelId = message.channel.id;
     const userRole = getHogwartsHouseRole(message.member.roles.cache);
 
-    // Check if the command is restricted
+    // Check the current time
     const currentTime = new Date();
-    if (currentTime < restrictedDate) {
-        // If before 31st Jan 2025, 5 PM GMT, send the custom message for certain commands
-        if (['!lesson', '!lessoncomplete', '!progress'].includes(message.content.toLowerCase())) {
-            return message.channel.send("The third-floor corridor on the right-hand side is out of bounds to everyone who does not wish to die a very painful death.");
-        }
-    }
 
     if (!message.content.startsWith('!')) return;
 
     const [command, ...args] = message.content.trim().split(/\s+/);
     const normalizedCommand = command.toLowerCase();
+
+    if (normalizedCommand === '!lessoncomplete' && currentTime > restrictedDateForLessonComplete) {
+        return message.channel.send("I open at the close.");
+    }
 
     const validCommands = [
         '!commands', '!ask', '!progress', '!addpoints', '!removepoints', 
@@ -237,6 +235,5 @@ client.on('messageCreate', async (message) => {
         message.channel.send('An error occurred while processing your command. Please try again later.');
     }
 });
-
 
 client.login(process.env.DISCORD_TOKEN);
