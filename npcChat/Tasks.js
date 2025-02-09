@@ -41,7 +41,7 @@ async function fetchTasks() {
         console.error('Error in fetchTasks:', error);
         return [];
     }
-}
+} 
 
 // Function to create and send an embed for each task
 async function postTaskToDiscord(client, task) {
