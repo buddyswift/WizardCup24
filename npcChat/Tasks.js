@@ -51,7 +51,6 @@ async function postTaskToDiscord(client, task) {
         .setTitle(`**${task.Title || 'No Title'}**`)
         .addFields(
             { name: '**🎯 Task**', value: `*${task['Short Description'] || 'No description available.'}*` },
-            { name: '**💰 Reward**', value: '1st: 50 pts\n2nd: 40 pts\n3rd: 30 pts\n4th: 20 pts' },
             { name: '**📝 Submission Type**', value: task['Submission Type'] || 'No description available.' },
         );
 
